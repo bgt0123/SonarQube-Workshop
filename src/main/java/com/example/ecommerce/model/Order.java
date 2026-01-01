@@ -1,51 +1,81 @@
 package com.example.ecommerce.model;
-import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "orders")
 public class Order {
-
-    private int id;
-    private int userId;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
+    
+    @Column(nullable = false)
+    private String productName;
+    
+    private int quantity;
+    private double price;
     private double totalAmount;
-    private Date orderDate;
-    private String status;
-
-    public int getId() {
+    
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+    
+    public Order() {
+        this.status = OrderStatus.PENDING;
+    }
+    
+    public Long getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    public void setId(Long id) {
         this.id = id;
     }
-
-    public int getUserId() {
-        return userId;
+    
+    public User getUser() {
+        return user;
     }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    
+    public void setUser(User user) {
+        this.user = user;
     }
-
-    public double getTotalAmount() {
-        return totalAmount;
+    
+    public String getProductName() {
+        return productName;
     }
-
+    
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public int getQuantity() {
+        return quantity;
+    }
+    
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+    
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
-
-    public Date getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
+    
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 }

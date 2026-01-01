@@ -1,136 +1,85 @@
 package com.example.ecommerce.model;
 
-import java.util.Date;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * User entity
- */
+@Entity
+@Table(name = "users")
 public class User {
-
-    // Public fields - Encapsulation Problem
-    public int id;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(unique = true, nullable = false)
     public String email;
-
-    private String password; // Sollte gehashed sein
+    
+    private String password;
     private String firstName;
     private String lastName;
-    private int age;
-    private String country;
-    private String cantonCode;
-    private int totalOrders;
-    private double totalSpent;
     private boolean premium;
-    private String[] orderHistory;
-    private Date createdAt;
-
-    // Kein Constructor
-
-    // Getters und Setters ohne Validierung
-    public int getId() {
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
+    
+    public User() {
+        this.orders = new ArrayList<>();
+    }
+    
+    public Long getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    public void setId(Long id) {
         this.id = id;
     }
-
+    
     public String getEmail() {
         return email;
     }
-
+    
     public void setEmail(String email) {
-        this.email = email; // Keine Email-Validierung
+        this.email = email;
     }
-
+    
     public String getPassword() {
-        return password; // Password sollte nie zurückgegeben werden
+        return password;
     }
-
+    
     public void setPassword(String password) {
-        this.password = password; // Sollte gehashed werden
+        this.password = password;
     }
-
+    
     public String getFirstName() {
         return firstName;
     }
-
+    
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
+    
     public String getLastName() {
         return lastName;
     }
-
+    
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age; // Keine Validierung (negative Zahlen möglich)
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCantonCode() {
-        return cantonCode;
-    }
-
-    public void setCantonCode(String cantonCode) {
-        this.cantonCode = cantonCode;
-    }
-
-    public int getTotalOrders() {
-        return totalOrders;
-    }
-
-    public void setTotalOrders(int totalOrders) {
-        this.totalOrders = totalOrders;
-    }
-
-    public double getTotalSpent() {
-        return totalSpent;
-    }
-
-    public void setTotalSpent(double totalSpent) {
-        this.totalSpent = totalSpent;
-    }
-
+    
     public boolean isPremium() {
         return premium;
     }
-
+    
     public void setPremium(boolean premium) {
         this.premium = premium;
     }
-
-    public String[] getOrderHistory() {
-        return orderHistory; // Array wird direkt zurückgegeben - mutable
+    
+    public List<Order> getOrders() {
+        return orders;
     }
-
-    public void setOrderHistory(String[] orderHistory) {
-        this.orderHistory = orderHistory; // Direkte Zuweisung ohne Kopie
+    
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
-
-    public Date getCreatedAt() {
-        return createdAt; // Mutable Date wird zurückgegeben
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    // equals() fehlt (sollte implementiert sein für Entity)
-    // hashCode() fehlt
-    // toString() fehlt
 }

