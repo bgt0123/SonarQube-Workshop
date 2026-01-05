@@ -78,4 +78,12 @@ public class Order {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
 }

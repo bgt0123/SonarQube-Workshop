@@ -2,21 +2,31 @@
 
 Eine Spring Boot E-Commerce Anwendung für SonarCloud Quality & Security Workshop.
 
+## 🎯 Lernziele
+
+Nach diesem Workshop können Sie:
+
+✅ SonarCloud nutzen und verstehen  
+✅ CVEs in Dependencies erkennen  
+✅ Security Hotspots identifizieren  
+✅ Code Quality Metriken interpretieren  
+✅ Technical Debt verstehen
+
+**Bonus:**
+✅ IntelliJ + SonarQube Plugin für Live-Feedback nutzen
+
 ## 📋 Voraussetzungen
 
 ### System Requirements
 - **JDK**: 11 oder höher
 - **Maven**: 3.6+ ([Download](https://maven.apache.org/download.cgi))
-- **Git**: Optional, für Version Control
-- **IDE**: IntelliJ IDEA (Community oder Ultimate)
-- **SonarQube for IDE Plugin**: Für Live-Feedback während des Codens
 
 ### Kompatibilität
 ✅ **Windows** (10, 11)  
 ✅ **macOS** (10.15+)  
 ✅ **Linux** (Ubuntu, Debian, Fedora, etc.)
 
-### Überprüfung der Installation
+### Installation prüfen
 
 ```bash
 # Java Version prüfen
@@ -28,43 +38,18 @@ mvn -version
 # Sollte zeigen: Apache Maven 3.6.x oder höher
 ```
 
-### IntelliJ IDEA Setup
+### Workshop-Zugang
 
-#### 1. IntelliJ IDEA installieren
+**Für den Workshop nutzen wir einen gemeinsamen GitHub Account:**
 
-**Download:** [https://www.jetbrains.com/idea/download/](https://www.jetbrains.com/idea/download/)
+```
+GitHub Account (für SonarCloud Login):
+Email:    bennet.bgt@googlemail.com
+Username: SonarQubeDemoUser  
+Password: SonarQubeWorkshop2026
+```
 
-- **Community Edition**: Kostenlos, ausreichend für den Workshop
-- **Ultimate Edition**: 30-Tage Trial, empfohlen für alle Features
-
-#### 2. SonarQube for IDE Plugin installieren
-
-**Wichtig:** Dieses Plugin zeigt Issues direkt in IntelliJ an - noch vor dem SonarCloud Scan!
-
-**Installation:**
-
-1. IntelliJ öffnen
-2. **Windows/Linux**: `File` → `Settings` → `Plugins`  
-   **macOS**: `IntelliJ IDEA` → `Settings` → `Plugins`
-3. Suche nach: **"SonarQube for IDE"** (früher SonarLint)
-4. Click **Install**
-5. IntelliJ neu starten
-
-**Alternativ:** [Marketplace Link](https://plugins.jetbrains.com/plugin/7973-sonarlint)
-
-**📖 Detaillierte Anleitung:** Siehe [INTELLIJ_SETUP.md](INTELLIJ_SETUP.md) für Schritt-für-Schritt Anleitung mit Screenshots-Beschreibung.
-
-#### 3. Plugin mit SonarCloud verbinden (Optional für später)
-
-Nach dem SonarCloud Scan kannst du das Plugin verbinden:
-
-1. **Settings** → **Tools** → **SonarQube for IDE** → **SonarCloud**
-2. Click **Add**
-3. Token von SonarCloud einfügen
-4. Organisation auswählen
-5. Projekt binden
-
-**Vorteil:** Siehst Issues während du tippst + SonarCloud Rules!
+**⚠️ Wichtig:** Diese Zugangsdaten nur während des Workshops nutzen!
 
 ## 🚀 Quick Start
 
@@ -93,11 +78,11 @@ mvn spring-boot:run
 Öffne Browser oder nutze curl:
 
 ```bash
-# Alle Orders ansehen
-curl http://localhost:8080/api/orders
-
 # Alle Users ansehen
-curl http://localhost:8080/api/users
+curl http://localhost:8081/api/users
+
+# Alle Orders ansehen
+curl http://localhost:8081/api/orders
 ```
 
 ## 📡 API Endpoints
@@ -117,8 +102,6 @@ GET    /api/orders/{id}        - Order by ID
 GET    /api/orders/user/{id}   - Orders eines Users
 GET    /api/orders/search      - Orders suchen (?product=MacBook)
 POST   /api/orders             - Order erstellen
-PUT    /api/orders/{id}/status - Status ändern (?status=DELIVERED)
-GET    /api/orders/stats/{id}  - User Statistiken
 ```
 
 ### Database Console
@@ -133,187 +116,165 @@ GET    /h2-console             - H2 Database Console
 
 Die Anwendung startet automatisch mit:
 
-### 3 Users:
-- **Alice** (alice@example.com) - Premium User, 2 Orders, €4,407
-- **Bob** (bob@example.com) - Regular User, 2 Orders, €1,736
-- **Charlie** (charlie@example.com) - New User, 1 Order, €139
+### 5 Users:
+- **Alice** (alice@example.com) - Premium User
+- **Bob** (bob@example.com) - Regular User
+- **Charlie** (charlie@example.com) - Premium User
+- **Diana** (diana@example.com) - Regular User
+- **Eve** (eve@example.com) - Premium User
 
-### 5 Orders:
-- MacBook Pro 16" (€2,249)
-- 2x iPhone 15 Pro (€2,158)
+### 10 Orders:
+- MacBook Pro 16" (€2,499)
+- 2x iPhone 15 Pro (€2,398)
 - Samsung Galaxy S24 (€899)
 - 3x AirPods Pro (€837)
+- iPad Air (€679)
+- Dell XPS 15 Laptop (€1,899)
+- Sony WH-1000XM5 Headphones (€379)
+- Apple Watch Series 9 (€449)
+- Nintendo Switch OLED (€349)
 - Kindle Paperwhite (€139)
 
-**Total Revenue**: €6,282
-
-## 💡 SonarQube for IDE - Live Feedback
-
-**Bevor du SonarCloud nutzt**, kannst du Issues schon in IntelliJ sehen!
-
-### Live-Analyse während du codest
-
-SonarQube for IDE zeigt Issues in Echtzeit:
-
-1. **Öffne Projekt in IntelliJ**
-   ```bash
-   # Im Projekt-Verzeichnis
-   idea .
-   # oder IntelliJ öffnen und Projekt importieren
-   ```
-
-2. **Warte auf Indexierung**
-   - IntelliJ muss das Projekt erst laden
-   - Unten rechts: "Indexing..." sollte verschwinden
-
-3. **Öffne eine Java-Datei**
-   - z.B. `UserService.java`
-   - Issues werden automatisch markiert
-
-4. **Issues ansehen**
-   - **Gelbe/Rote Wellenlinien** im Code
-   - **Glühbirne-Icon** → Click für Details
-   - **SonarQube Tab** unten → Alle Issues
-
-### Was siehst du sofort?
-
-Ohne SonarCloud-Scan zeigt das Plugin bereits:
-
-✅ **Code Smells**: Komplexität, Magic Numbers, etc.  
-✅ **Bugs**: NullPointer, Resource Leaks, etc.  
-✅ **Security Hotspots**: SQL Injection, Hardcoded Credentials  
-⚠️ **CVEs**: Werden erst bei SonarCloud Scan erkannt (braucht Dependency-Analyse)
-
-### Beispiel
-
-Öffne `UserService.java` Line 50:
-
-```java
-String query = "SELECT * FROM users WHERE email LIKE '%" + email + "%'";
-```
-
-SonarQube for IDE zeigt:
-- 🔴 **Critical**: SQL Injection vulnerability
-- 💡 **Fix**: Use PreparedStatement instead
-
-### Vorteile
-
-| Feature | SonarQube for IDE | SonarCloud |
-|---------|-------------------|------------|
-| **Speed** | Instant | 2-3 Min Scan |
-| **Local** | Ja, offline | Nein, braucht Internet |
-| **CVEs** | ❌ | ✅ |
-| **Team Rules** | Nach Binding | ✅ |
-| **History** | ❌ | ✅ |
-| **CI/CD** | ❌ | ✅ |
-
-**Best Practice:** Nutze beide zusammen!
-- IntelliJ Plugin: Während Entwicklung
-- SonarCloud: Für Team, CI/CD, CVEs
+**Total Revenue**: €10,527
 
 ## 🔍 SonarCloud Scan
 
-### SonarCloud Account erstellen
+### 1. Bei SonarCloud anmelden
 
 1. Gehe zu [sonarcloud.io](https://sonarcloud.io)
-2. "Start Free" → Mit GitHub/GitLab anmelden
-3. "Start your free trial" → **Team Plan** wählen (14 Tage kostenlos)
-4. Organisation erstellen
+2. Click **"Log in"**
+3. Wähle **"Sign in with GitHub"**
+4. **Nutze die Workshop-Zugangsdaten** (siehe oben)
 
-### Projekt analysieren
+### 2. Projekt analysieren
 
-```bash
+**Token vom Trainer erhalten** und dann:
+
+```bash 
 mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=YOUR_PROJECT_KEY \
-  -Dsonar.organization=YOUR_ORG \
+  -Dsonar.projectKey=ecommerce-workshop \
+  -Dsonar.organization=WORKSHOP_ORG \
   -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.token=YOUR_TOKEN
+  -Dsonar.token=TRAINER_PROVIDED_TOKEN
 ```
 
-**Token generieren:**
-1. SonarCloud → My Account → Security
-2. Generate Token
-3. Token kopieren und im Befehl einfügen
-
-## 📊 Was SonarCloud finden wird
-
-SonarCloud Team wird automatisch erkennen:
-
-- **6+ CVEs** in Dependencies (Log4Shell, Jackson, etc.)
-- **15+ Security Hotspots** (SQL Injection, Hardcoded Credentials, etc.)
-- **20+ Bugs** (NullPointer, Resource Leaks, etc.)
-- **70+ Code Smells** (Complexity, Duplication, Magic Numbers, etc.)
-
-**Total**: 100+ Issues
-
-## 🛠️ Troubleshooting
-
-### Port 8080 bereits belegt
-
-```bash
-# Windows: Finde Prozess
-netstat -ano | findstr :8080
-
-# Mac/Linux: Finde Prozess
-lsof -i :8080
-
-# Anderen Port nutzen
-mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
+**Windows:**
+```cmd
+mvn clean verify sonar:sonar ^
+  -Dsonar.projectKey=ecommerce-workshop ^
+  -Dsonar.organization=WORKSHOP_ORG ^
+  -Dsonar.host.url=https://sonarcloud.io ^
+  -Dsonar.token=TRAINER_PROVIDED_TOKEN
 ```
 
-### "JAVA_HOME not set"
+**MacOS:**
+```TBD```
 
-```bash
-# Windows
-set JAVA_HOME=C:\Program Files\Java\jdk-11
+### 3. Ergebnisse ansehen
 
-# Mac/Linux
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-```
+1. Scan läuft (~2-3 Minuten)
+2. Öffne: https://sonarcloud.io
+3. Navigiere zu deinem Projekt
+4. Erkunde: Issues, Security Hotspots, Code Smells
 
-### Maven Build Fehler
+---
 
-```bash
-# Cache löschen
-mvn clean
+## 🎁 BONUS - Für schnelle Teilnehmer
 
-# Offline-Modus deaktivieren
-mvn clean install -U
-```
+**Fertig mit den Workshop-Aufgaben? Hier sind erweiterte Challenges:**
 
-### H2 Console lädt nicht
+### 🔧 Bonus 1: IntelliJ IDEA + SonarQube Plugin
 
-Prüfe `src/main/resources/application.properties`:
-```properties
-spring.h2.console.enabled=true
-```
+**Setup IntelliJ für Live-Feedback während des Codens**
 
-## 💡 Tipps für den Workshop
+#### Installation
 
-### Für Teilnehmer
+1. **IntelliJ IDEA herunterladen**
+   - [Download Community Edition](https://www.jetbrains.com/idea/download/) (kostenlos)
+   - Oder Ultimate Edition (30-Tage Trial)
 
-1. **Vor dem Workshop**: 
-   - JDK 11 installieren
-   - Maven installieren
-   - SonarCloud Account erstellen
+2. **SonarQube for IDE Plugin installieren**
+   ```
+   IntelliJ öffnen
+   → File → Settings → Plugins (Windows/Linux)
+   → IntelliJ IDEA → Settings → Plugins (macOS)
+   → Suche: "SonarQube for IDE"
+   → Install → IntelliJ neu starten
+   ```
+
+3. **Projekt öffnen**
+   ```bash
+   # Im Terminal
+   cd ecommerce-app
+   idea .
    
-2. **Während des Workshops**:
-   - Anwendung lokal laufen lassen
-   - API Endpoints testen
-   - SonarCloud Dashboard erkunden
+   # Oder: IntelliJ → Open → ecommerce-app Ordner wählen
+   ```
 
-3. **Nach dem Workshop**:
-   - Issues selbst fixen
-   - Re-Scan durchführen
-   - Improvements dokumentieren
+4. **Warte auf Indexierung**
+   - Unten rechts: "Indexing..." muss fertig sein
+   - Kann 2-5 Minuten dauern
 
-### Für Trainer
+#### Live-Analyse nutzen
 
-- Alle Issues sind sorgfältig platziert
-- Business Logic ist einfach gehalten
-- Code kompiliert und läuft problemlos
-- Demo-Daten sind aussagekräftig
-- Siehe `TRAINER_GUIDE.md` für Issue-Übersicht
+1. **Issues sofort sehen**
+   ```
+   Öffne: UserService.java
+   → Zeile 44: SQL Injection (rot markiert)
+   → Zeile 24: Hardcoded Password (gelb markiert)
+   ```
+
+2. **Quick Fixes nutzen**
+   ```
+   Cursor auf Issue → Alt+Enter (Win/Linux) oder ⌥↵ (Mac)
+   → Zeigt Vorschläge zur Behebung
+   ```
+
+3. **SonarQube Tool Window**
+   ```
+   View → Tool Windows → SonarQube (oder Alt+6)
+   → Zeigt alle Issues im Projekt
+   → Filter nach Severity, Type, etc.
+   ```
+
+#### Plugin mit SonarCloud verbinden (Optional)
+
+**Nach dem ersten Scan kannst du das Plugin verbinden:**
+
+1. **Settings → Tools → SonarQube for IDE → SonarCloud**
+2. Click **"+"** → Add Connection
+3. Token einfügen (vom Trainer)
+4. Organisation wählen: `WORKSHOP_ORG`
+5. Projekt binden: `ecommerce-workshop`
+
+**Vorteil:** Team Rules + Server-side Issues auch lokal!
+
+**📖 Mehr Details:** Siehe [INTELLIJ_SETUP.md](INTELLIJ_SETUP.md)
+
+---
+
+### 📊 Bonus 2: Quality Gate selbst konfigurieren
+
+**Schwierigkeit:** ⭐⭐ (Medium)  
+**Zeit:** 10 Minuten
+
+1. **SonarCloud → Quality Gates**
+2. **Eigenes Gate erstellen:** "Workshop-Gate"
+3. **Bedingungen hinzufügen:**
+   - Coverage on New Code < 80% → Failed
+   - Duplicated Lines on New Code > 3% → Failed
+   - New Security Hotspots > 0 → Warning
+   - New Bugs > 0 → Failed
+4. **Auf Projekt anwenden**
+5. **Re-Scan → Status prüfen**
+
+**Diskussion:**
+- Würdet ihr das in eurem Team nutzen?
+- Zu strikt oder zu locker?
+- Welche Bedingungen sind wichtig?
+
+---
+
 
 ## 📂 Projekt-Struktur
 
@@ -338,35 +299,16 @@ ecommerce-app/
 │   │   │       ├── Order.java
 │   │   │       └── OrderStatus.java            # Enum
 │   │   └── resources/
-│   │       └── application.properties
+│   │       ├── application.properties          # Config
+│   │       └── import.sql                      # Demo Data
 │   └── test/
-│       └── java/                               # (Tests können hinzugefügt werden)
+│       └── java/                               # (Tests optional)
 └── README.md                                   # Diese Datei
 ```
-
-## 🎯 Lernziele
-
-Nach diesem Workshop können Sie:
-
-✅ SonarCloud Team einrichten und nutzen  
-✅ CVEs in Dependencies erkennen  
-✅ Security Hotspots identifizieren  
-✅ Code Quality Metriken interpretieren  
-✅ Technical Debt verstehen  
-✅ Quality Gates konfigurieren  
-✅ Issues systematisch beheben  
 
 ## 📚 Weiterführende Links
 
 - [SonarCloud Dokumentation](https://docs.sonarcloud.io)
 - [Spring Boot Docs](https://docs.spring.io/spring-boot/docs/current/reference/html/)
-- [Maven Guide](https://maven.apache.org/guides/)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-
-## ⚖️ Lizenz
-
-Nur für Bildungszwecke. Nicht für Produktions-Einsatz!
-
----
-
-**Viel Erfolg beim Workshop! 🎓**
+- [SonarQube for IDE](https://www.sonarsource.com/products/sonarlint/)
